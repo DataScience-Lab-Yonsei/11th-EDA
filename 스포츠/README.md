@@ -1,4 +1,4 @@
-# Projec Hangang Gang
+# Project Hangang Gang
 **Can Hanwha Eagles be rehabilitated into a strong team?**  
 
 Project 한강 Gang(**한**화 이글스를 **강**팀으로 **갱**생시킬 수 있을까?)
