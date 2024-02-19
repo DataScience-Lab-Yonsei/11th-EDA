@@ -1,0 +1,118 @@
+from bs4 import BeautifulSoup
+from selenium import webdriver
+import time
+from html_table_parser import parser_functions as parser
+import pandas as pd
+from selenium.webdriver.support.select import Select
+from urllib.request import urlopen
+
+# 검색할 URL (타자, 투수, 수비, 주루)
+# URL1 = 'https://www.koreabaseball.com/Record/Team/Hitter/Basic1.aspx'
+# URL2 = 'https://www.koreabaseball.com/Record/Team/Pitcher/Basic1.aspx'
+# URL3 = 'https://www.koreabaseball.com/Record/Team/Defense/Basic.aspx'
+# URL4 = 'https://www.koreabaseball.com/Record/Team/Runner/Basic.aspx'
+
+# 연도별 팀 성적을 담을 빈 데이터프레임 생성
+Data_list =[]
+
+for i in range(2001,2021):
+    Data_list.append('KBO_Team_'+ str(i))
+
+df_list = []
+
+for data in Data_list:
+    data = pd.DataFrame()
+    df_list.append(data)
+
+
+# URL에 들어갈 Query 변수들의 딕셔너리 생성
+URL_list = {'Hitter':'Basic1', 'Hitter1':'Basic2', 'Pitcher':'Basic1', 'Pitcher1':'Basic2', 'Defense':'Basic', 'Runner':'Basic'}
+
+for i in range(0, len(URL_list)):
+
+    # 드라이버 객체 생성
+    driver = webdriver.Chrome(executable_path='chromedriver')
+
+    if (i == 1) | (i == 3):
+        # URL 순서 (타자, 투수, 수비, 주루)
+        URL = 'https://www.koreabaseball.com/Record/Team/{position}/{what}.aspx'.format(position=list(URL_list.keys())[i][:-1],
+                                                                                      what=list(URL_list.values())[i])
+
+    else:
+        URL = 'https://www.koreabaseball.com/Record/Team/{position}/{what}.aspx'.format(
+            position=list(URL_list.keys())[i],
+            what=list(URL_list.values())[i])
+
+    # URL 바꿔주기
+    driver.get(url = str(URL))
+
+    # 0 - 2001년, 1 - 2002년, ...
+    # 14 - 2015년, 15 - 2016년 , ...
+    for j in range(0, 20):
+        # select 태그의 옵션의 인덱스 값을 이용하여 원하는 연도를 불러오기
+        select_tag = Select(driver.find_element_by_id("cphContents_cphContents_cphContents_ddlSeason_ddlSeason"))
+        select_tag.select_by_index(j)
+
+        # HTML 코드를 불러오도록 3초 딜레이
+        time.sleep(3)
+
+        # 선택한 년도의 표를 읽어서 데이터프레임으로 생성하기
+        html = driver.page_source
+        soup = BeautifulSoup(html, 'html.parser')
+        temp = soup.find_all('table')
+        p = parser.make2d(temp[0])
+        df = pd.DataFrame(p[1:], columns=p[0])
+
+        # 타자 데이터일 경우 빈 데이터프레임과 합치기
+        if i == 0:
+            df_list[j] = pd.concat([df_list[j], df], ignore_index=True)
+
+        # 투수, 수비, 주루 데이터는 기존에 생성된 타자 데이터와 팀명 컬럼을 기준으로 합치기
+        else :
+            df_list[j] = pd.merge(df_list[j], df, on='팀명')
+
+
+    # driver 객체 닫기
+    driver.close()
+
+
+# 중복이 되는 순위와 게임 수, ERA, AVG 삭제
+for i in range(len(df_list)):
+    df_list[i] = df_list[i].drop(['순위_y', 'G_y', '순위_x', 'G_x', 'ERA_y', 'AVG_y'], axis = 1)
+
+
+# 순위 데이터 불러오기
+# http://www.statiz.co.kr/league.php?opt=2005&sopt=0
+# 스탯티즈 사이트 업데이트가 되지 않아서 2020 시즌은 표의 위치가 다름 (나중에 따로 추가)
+# 불어온 df 와 기존에 만든 것과 병합 merge 시키기
+for i in range(2001, 2021):
+
+    URL = 'http://www.statiz.co.kr/league.php?opt={year}'.format(year = i)
+
+    html = urlopen(url = URL)
+    soup = BeautifulSoup(html, 'html.parser')
+    temp = soup.find_all('table')
+
+    # 기존에 만든 데이터프레임(df_list)에 순위 항목 병합시키기
+    # df_list의 0번째가 2001년 데이터
+
+    # 2020년 데이터는 스탯티즈에서 업데이트 되지 않았기 때문에 따로 2020년 제외한 나머지는 병합
+    # 2020년 데이터는 순위를 넣어주기
+    # 맨 마지막 같은 경우에는 합계가 맨 끝에 들어가 있으므로 합계 행을 삭제 후 순위를 넣어줘야함
+    if i == 2020:
+        df_list[i - 2001] = df_list[i - 2001].drop(10)
+        df_list[i - 2001]['순위'] = ['3', '1', '2', '4', '7', '6', '5', '8', '9', '10']
+
+    else:
+        p = parser.make2d(temp[3])
+        df = pd.DataFrame(p[1:], columns=p[0])
+        df = df[['순', '팀']]
+        df.columns = ['순위', '팀명']
+
+        # 원하는 데이터는 팀명과 순위
+        df_list[i-2001] = pd.merge(df_list[i-2001], df, on='팀명')
+
+
+# 2001년부터 2020년까지의 팀 데이터 내보내기
+for i in range(len(df_list)):
+    df_list[i].to_csv('./data/'+str(Data_list[i])+'.csv', index=False)
