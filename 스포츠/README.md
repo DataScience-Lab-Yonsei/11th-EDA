@@ -144,15 +144,17 @@ In 2018, Hanwha Eagles hitters' batting average did not differ significantly fro
 <img src="./README_images/정은원_photo.png" height="70"/>
 
 ![](./README_images/정은원_basic.png)
+
 ![](./README_images/정은원_tracking.png)
-K\% $\downarrow$, BB\% $\downarrow$  
-BABIP $\downarrow \downarrow$  
+    K\% $\downarrow$, BB\% $\downarrow$  
+    BABIP $\downarrow \downarrow$  
 If he lowers the launch angle of the ball and produces more line-drive hits like before, he will likely get better records.
 
 ##### 2. Eunseong Chae(채은성)
 <img src="./README_images/채은성_photo.png" height="70"/>
 
 ![](./README_images/채은성_basic.png)
+
 ![](./README_images/채은성_tracking.png)
 K\% similar, BB\% similar, exit velocity $\uparrow$, hard hit\% $\uparrow$    
 BABIP $\downarrow \downarrow$  
@@ -171,7 +173,9 @@ Dongju Moon(문동주), KBO League rookie of the year last season, had an inning
 <img src="./README_images/주현상_photo.png" height="70"/>
 
 ![](./README_images/주현상_basic.png)
+
 ![](./README_images/주현상_BABIP.png)
+
 ![](./README_images/주현상_slider_tracking_revised.png)
 K\% $\uparrow$, FIP $\downarrow$, BABIP $\downarrow \downarrow$, slider $\uparrow \uparrow$  
 Hyunsang Ju(주현상)'s slider got very good last season. However, despite this improved aspect, his performance came out much better than expected. Considering the BABIP figures and FIP, it can be concluded that he was really lucky. As a result, he will be difficult to perform better than last season, even though he will still be a good pitcher this season.
@@ -180,7 +184,9 @@ Hyunsang Ju(주현상)'s slider got very good last season. However, despite this
 <img src="./README_images/윤대경_photo.png" height="70"/>
 
 ![](./README_images/윤대경_basic.png)
+
 ![](./README_images/윤대경_BABIP.png)
+
 ![](./README_images/윤대경_fastball_tracking.png)
 FIP $\uparrow$, BABIP $\downarrow \downarrow$, fast ball $\uparrow$  
 Daekyung Yun(윤대경)'s fastball movement and RPM have gotten better. But even with these improvements, his FIP was the highest in the last four years and his BABIP was the lowest in the last four years. Considering these points, it can be concluded that he was very lucky last season. If BABIP comes back to average, his performance is highly likely to drop.
@@ -190,6 +196,7 @@ Daekyung Yun(윤대경)'s fastball movement and RPM have gotten better. But even
 <img src="./README_images/안치홍_photo.jpg" height="70"/>
 
 ![](./README_images/안치홍_basic.png)
+
 ![](./README_images/안치홍_tracking.png)
 K\% similar, BB\% similar, BABIP similar, exit velocity $\downarrow$  
 Except for the drop in exit velocity, all hitting records including K\% and BB\% are stable for a long time, so he is expected to yield similar results to last season. He is a clear plus factor for Hanwha Eagles' weak batting lineup.
